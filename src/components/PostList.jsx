@@ -1,20 +1,24 @@
 import Link from "next/link";
 import { Pagination } from "./Pagination";
 import { Vote } from "./Vote";
-import { db } from "@/db";
+//import { db } from "@/db";
 import { POSTS_PER_PAGE } from "@/config";
+import { Connect } from "./Connect";
 
+
+//poped brakets around the wait db.query function. NPM Instaled PG. Made a connect function nad js page then added it to the function to connect the databse to the page. Also got rid of the "post." bit from the list of columbs on the SQL statment as the name of the form is irten after "from".
 export async function PostList({ currentPage = 1 }) {
+  const db = Connect()
   const { rows: posts } =
-    await db.query(`SELECT posts.id, posts.title, posts.body, posts.created_at, users.name, 
+    (await db.query(`SELECT id, title, body, user_id, created_at,  
     COALESCE(SUM(votes.vote), 0) AS vote_total
      FROM posts
-     JOIN users ON posts.user_id = users.id
+     JOIN users ON posts.user_id = users_id
      LEFT JOIN votes ON votes.post_id = posts.id
      GROUP BY posts.id, users.name
      ORDER BY vote_total DESC
      LIMIT ${POSTS_PER_PAGE}
-     OFFSET ${POSTS_PER_PAGE * (currentPage - 1)}`);
+     OFFSET ${POSTS_PER_PAGE * (currentPage - 1)}`));
 
   return (
     <>

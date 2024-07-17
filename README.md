@@ -1,4 +1,8 @@
-//hello world!
+##hello world!
+
+##Source
+- Info about AUTH_SECRET https://github.com/nextauthjs/next-auth/issues/9297
+
 
 ## Upvote
 
